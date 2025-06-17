@@ -147,7 +147,6 @@ def ring_flashinfer_attn_backward(
 WORKSPACE_BUFFER = None
 PREFILL_WRAPPER = None
 
-
 class RingFlashInferAttnFunc(torch.autograd.Function):
     @staticmethod
     def forward(

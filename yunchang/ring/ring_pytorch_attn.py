@@ -25,9 +25,9 @@ def ring_pytorch_attn_func(
     attn_type: AttnType = AttnType.FA,
     attn_processor=None,
 ):
-    return RingAttentionFunc.apply(group, q, k, v, softmax_scale, causal)
+    return RingTorchAttnFunc.apply(group, q, k, v, softmax_scale, causal)
 
-class RingAttentionFunc(torch.autograd.Function):
+class RingTorchAttnFunc(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx, group, q, k, v, sm_scale, is_causal):

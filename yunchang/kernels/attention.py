@@ -38,9 +38,9 @@ def pytorch_attn_forward(
     softcap=None,
     alibi_slopes=None,
     return_softmax=False,
-    op_type="flash",
+    op_type="cudnn",
 ):
-    assert op_type in ["flash", "efficient"], f"Invalid op_type: {op_type}"
+    assert op_type in ["flash", "efficient", "cudnn"], f"Invalid op_type: {op_type}"
     """
     q shape (bs, seqlen, nhead, hs)
     k shape (bs, seqlen, nhead, hs)
@@ -61,6 +61,17 @@ def pytorch_attn_forward(
         )[:2]
     elif op_type == "efficient":
         out, lse = aten._scaled_dot_product_efficient_attention(
+            q,
+            k,
+            v,
+            attn_bias=None,
+            compute_log_sumexp=True,
+            dropout_p=dropout_p,
+            is_causal=causal,
+            scale=softmax_scale,
+        )[:2]
+    elif op_type == "cudnn":
+        out, lse = aten._scaled_dot_product_cudnn_attention(
             q,
             k,
             v,
